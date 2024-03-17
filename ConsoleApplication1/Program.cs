@@ -21,7 +21,13 @@ namespace ConsoleApplication1
         }
         static double AverageTab(int[] tab)
         {
-            return tab.Average();
+            var avarage = 0;
+            foreach (var i in tab)
+            {
+                avarage += i;
+            }
+
+            return avarage / tab.Length;
         }
         static int Addition(int a, int b)
         {
