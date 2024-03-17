@@ -6,14 +6,15 @@ namespace ConsoleApplication1
         public static void Main(string[] args)
         {
             System.Console.WriteLine("Hello World");
+            System.Console.WriteLine("2+2 ="+Addition(2,2) + "; 10-5 =" + Substraction(10,5));
         }
 
-        int Addition(int a, int b)
+        static int Addition(int a, int b)
         {
             return a + b;
         }
 
-        int Substraction(int a, int b)
+        static int Substraction(int a, int b)
         {
             return a - b;
         }
