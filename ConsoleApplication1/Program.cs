@@ -12,6 +12,11 @@ namespace ConsoleApplication1
         {
             return a + b;
         }
+
+        int Substraction(int a, int b)
+        {
+            return a - b;
+        }
         
     }
 }
