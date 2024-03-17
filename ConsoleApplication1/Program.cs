@@ -11,7 +11,12 @@ namespace ConsoleApplication1
             Console.WriteLine("Hello World");
             int[] tab={1,2,3,4,5};
             Console.WriteLine(AverageTab(tab));
-            
+            Console.WriteLine(GetMax(tab));
+        }
+
+        static int GetMax(int[] tab)
+        {
+            return tab.Max();
         }
         static double AverageTab(int[] tab)
         {
