@@ -21,6 +21,7 @@ namespace ConsoleApplication1
         }
         static double AverageTab(int[] tab)
         {
+            Console.WriteLine("Obliczanie średniej");
             return tab.Average();
         }
         static int Addition(int a, int b)
