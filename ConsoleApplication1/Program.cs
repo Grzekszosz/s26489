@@ -14,6 +14,7 @@ namespace ConsoleApplication1
             Console.WriteLine(GetMax(tab));
         }
 
+        //Wylicza max z tablicy int
         static int GetMax(int[] tab)
         {
             return tab.Max();
