@@ -1,4 +1,5 @@
-﻿namespace ConsoleApplication1
+﻿
+namespace ConsoleApplication1
 {
     internal class Program
     {
@@ -6,5 +7,11 @@
         {
             System.Console.WriteLine("Hello World");
         }
+
+        int Addition(int a, int b)
+        {
+            return a + b;
+        }
+        
     }
 }
