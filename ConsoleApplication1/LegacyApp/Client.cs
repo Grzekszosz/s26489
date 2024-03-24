@@ -1,4 +1,6 @@
-﻿namespace LegacyApp
+﻿using System;
+
+namespace LegacyApp
 {
     public class Client
     {
@@ -9,3 +11,4 @@
         public string Type { get; set; }
     }
 }
+    
