@@ -12,8 +12,13 @@ public class AnimalService : IAnimalService
         _animalRepository = animalRepository;
     }
 
-    public IEnumerable<Animal> GetAnimals()
+    public IEnumerable<Animal> GetAnimals(string orderBy)
     {
-        return _animalRepository.GetAnimals();
+        return _animalRepository.GetAnimals(orderBy);
+    }
+
+    public int CreateAnimal(Animal animal)
+    {
+        return _animalRepository.CreateAnimal(animal);
     }
 }

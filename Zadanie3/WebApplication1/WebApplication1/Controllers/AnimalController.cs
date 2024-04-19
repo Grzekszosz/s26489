@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Model;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers;
@@ -14,9 +15,23 @@ public class AnimalController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAnimals()
+    public IActionResult GetAnimals([FromQuery] string orderBy = "Name")
     {
-        var animals = _animalService.GetAnimals();
-        return Ok(animals);
+        try
+        {
+            var animals = _animalService.GetAnimals(orderBy);
+            return Ok(animals);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public IActionResult CreateAnimal(Animal animal)
+    {
+        var affectedCount = _animalService.CreateAnimal(animal);
+        return StatusCode(StatusCodes.Status201Created);
     }
 }

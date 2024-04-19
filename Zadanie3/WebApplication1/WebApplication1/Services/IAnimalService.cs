@@ -4,6 +4,6 @@ namespace WebApplication1.Services;
 
 public interface IAnimalService
 {
-    IEnumerable<Animal> GetAnimals();
-    
+    IEnumerable<Animal> GetAnimals(string orderBy);
+    int CreateAnimal(Animal animal);
 }
