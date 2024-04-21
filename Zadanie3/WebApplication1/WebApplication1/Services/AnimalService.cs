@@ -21,4 +21,9 @@ public class AnimalService : IAnimalService
     {
         return _animalRepository.CreateAnimal(animal);
     }
+
+    public int UpdateAnimal(int IDAnimal, Animal animal)
+    {
+        return _animalRepository.UpdateAnimal(IDAnimal, animal);
+    }
 }

@@ -31,13 +31,8 @@ public class AnimalRepository : IAnimalRepository
         var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
         using var con = new SqlConnection(connectionString);
         con.Open();
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException("Nie udało się nawiązać połączenia z bazą");
-        };
         using var cmd = new SqlCommand();
         cmd.Connection = con;
-//string querry="SELECT IDAnimal, Name, Description, Category, Area  FROM s26489.APDBP.Animals ORDER BY  @orderBy"
         cmd.CommandText = $"SELECT IDAnimal, Name, Description, Category, Area  FROM s26489.APDBP.Animals ORDER BY {orderBy}";
         var dr = cmd.ExecuteReader();
         var animals = new List<Animal>();
@@ -62,13 +57,28 @@ public class AnimalRepository : IAnimalRepository
         var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
         using var con = new SqlConnection(connectionString);
         con.Open();
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException("Nie udało się nawiązać połączenia z bazą");
-        };
         using var cmd = new SqlCommand();
         cmd.Connection = con;
-       cmd.CommandText = "INSERT INTO s26489.APDBP.Animals (IDAnimal, Name, Description, Category, Area) VALUES(@Name, @Description, @Category, @Area)";
+        cmd.CommandText = "INSERT INTO s26489.APDBP.Animals (Name, Description, Category, Area) VALUES(@Name, @Description, @Category, @Area)";
+        cmd.Parameters.AddWithValue("@Name", animal.Name);
+        cmd.Parameters.AddWithValue("@Description", animal.Description);
+        cmd.Parameters.AddWithValue("@Category", animal.Category);
+        cmd.Parameters.AddWithValue("@Area", animal.Area);
+        var affectedCount = cmd.ExecuteNonQuery();
+        return affectedCount;
+    }
+
+    public int UpdateAnimal(int IDAnimal,Animal animal)
+    {
+        
+        //TODO Checking IDAnimal is avaliable - return error code when not exists in db
+        var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+        using var con = new SqlConnection(connectionString);
+        con.Open();
+        using var cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.CommandText ="UPDATE s26489.APDBP.Animals SET Name=@Name, Description=@Description, Category=@Category, Area=@Area WHERE IDAnimal=@IDAnimal";
+        cmd.Parameters.AddWithValue("@IDAnimal", IDAnimal);
         cmd.Parameters.AddWithValue("@Name", animal.Name);
         cmd.Parameters.AddWithValue("@Description", animal.Description);
         cmd.Parameters.AddWithValue("@Category", animal.Category);
