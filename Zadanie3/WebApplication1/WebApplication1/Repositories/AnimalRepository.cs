@@ -72,6 +72,10 @@ public class AnimalRepository : IAnimalRepository
     {
         
         //TODO Checking IDAnimal is avaliable - return error code when not exists in db
+/*        if (!AvaliableAnimal(IDAnimal))
+        {
+            throw new Exception( StatusCodes.Status404NotFound.ToString());
+        }*/
         var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
         using var con = new SqlConnection(connectionString);
         con.Open();
@@ -86,5 +90,40 @@ public class AnimalRepository : IAnimalRepository
         var affectedCount = cmd.ExecuteNonQuery();
         return affectedCount;
     }
+
+    public bool AvaliableAnimal(int IDAnimal)
+    {
+        var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+        using var con = new SqlConnection(connectionString);
+        con.Open();
+        using var cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT COUNT(1) FROM s26489.APDBP.Animals WHERE IDAnimal=@IDAnimal";
+        cmd.Parameters.AddWithValue("@IDAnimal", IDAnimal);
+        var affectedCount = cmd.ExecuteScalar();
+        if ((int)affectedCount == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public int DeleteAnimal(int IDAnimal)
+    {
+        var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+        using var con = new SqlConnection(connectionString);
+        con.Open();
+        using var cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.CommandText = "DELETE FROM s26489.APDBP.Animals WHERE IDAnimal=@IDAnimal";
+        cmd.Parameters.AddWithValue("@IDAnimal", IDAnimal);
+
+        var affectedCount = cmd.ExecuteNonQuery();
+        return affectedCount;
+    }
+    
     
 }

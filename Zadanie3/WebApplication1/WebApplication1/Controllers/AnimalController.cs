@@ -38,7 +38,29 @@ public class AnimalController : ControllerBase
     [HttpPut("{id:int}")]
     public IActionResult UpdateAnimal(int id, Animal animal)
     {
-        var affectedCount = _animalService.UpdateAnimal(id, animal);
-        return StatusCode(StatusCodes.Status204NoContent);
+        try
+        {
+            var affectedCount = _animalService.UpdateAnimal(id, animal);
+            return StatusCode(StatusCodes.Status204NoContent);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
+
+    [HttpDelete("{id:int}")]
+    public IActionResult DeleteAniaml(int id)
+    {
+        try
+        {
+            var affectedCount = _animalService.DeleteAnimal(id);
+            return StatusCode(StatusCodes.Status204NoContent);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+    
 }
