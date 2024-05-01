@@ -1,4 +1,7 @@
 using System.Data.SqlClient;
+using WebApplication2.Repositories;
+using WebApplication2.Services;
+
 //using WebApplication2.Repositories;
 //using WebApplication2.Services;
 
@@ -12,8 +15,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
-       // builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
-       //builder.Services.AddScoped<IAnimalService, AnimalService>();
+        builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
+        builder.Services.AddScoped<IWareHouseService, WareHouseService>();
        
         var app = builder.Build();
        

@@ -3,7 +3,8 @@ using WebApplication2.Model;
 using WebApplication2.Services;
 
 namespace WebApplication2.Controllers;
-
+[Route("api/[controller]")]
+[ApiController]
 public class WareHouseController : ControllerBase
 {
     private IWareHouseService _wareHouseService;
@@ -14,10 +15,17 @@ public class WareHouseController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult AddProduct(Product product)
+    public async Task<IActionResult> AddProductAsync(Product product)
     {
-        
-        return product;
+        try
+        {
+            var affectedCount = await _wareHouseService.AddProductAsync(product);
+            return StatusCode(StatusCodes.Status201Created);    
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }
 
