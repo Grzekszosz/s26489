@@ -19,7 +19,7 @@ public class WareHouseController : ControllerBase
     {
         try
         {
-            var affectedCount = await _wareHouseService.AddProductAsync(product);
+            await _wareHouseService.AddProductAsync(product);
             return StatusCode(StatusCodes.Status201Created);    
         }
         catch (ArgumentException ex)

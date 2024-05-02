@@ -1,4 +1,5 @@
-﻿using WebApplication2.Model;
+﻿using System.Net.NetworkInformation;
+using WebApplication2.Model;
 using WebApplication2.Repositories;
 
 namespace WebApplication2.Services;
@@ -13,15 +14,25 @@ public class WareHouseService : IWareHouseService
     }
     public async Task <int> AddProductAsync (Product product)
     {
-        if (!_wareHouseRepository.AvaliableProductAsync(product.IDProduct))
+        if (!await _wareHouseRepository.AvaliableProductAsync(product))
         {
             throw new Exception("Nie ma produktu");
+        }
+        if (!await _wareHouseRepository.AvaliableOrderAsync(product))
+        {
+            throw new Exception("Brak dopasowanego zamówienia");
         }
         return await _wareHouseRepository.AddProductAsync(product);
     }
 
-    public async bool AvaliableProductAsync(int IDProdukt)
+    public async Task<bool> AvaliableProductAsync(Product product)
     {
         throw new NotImplementedException();
     }
+
+    public async Task<bool> AvaliableOrderAsync(Product product)
+    {
+        throw new NotImplementedException();
+    }
+    public async Task<bool> AlredyOrderedAsync(Product product)
 }   
