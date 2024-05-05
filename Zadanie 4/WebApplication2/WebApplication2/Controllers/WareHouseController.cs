@@ -19,8 +19,8 @@ public class WareHouseController : ControllerBase
     {
         try
         {
-            await _wareHouseService.AddProductAsync(product);
-            return StatusCode(StatusCodes.Status201Created);    
+            var a = await _wareHouseService.AddProductAsync(product);
+            return StatusCode(StatusCodes.Status201Created, new {IdProductWarehouse = a} );    
         }
         catch (ArgumentException ex)
         {

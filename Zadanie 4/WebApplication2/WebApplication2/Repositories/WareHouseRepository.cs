@@ -12,12 +12,65 @@ public class WareHouseRepository : IWareHouseRepository
     {
         _configuration = configuration;
     }
+    /*
+5.Wstawiamy rekord do tabeli Product_Warehouse. Kolumna Price
+powinna odpowiadać cenie produktu pomnożonej przez kolumnę Amount
+z naszego zamówienia. Ponadto wstawiamy wartość CreatedAt zgodnie
+z aktualnym czasem. (INSERT)
+*/
     public async Task<int> AddProductAsync(Product product)
     {
         var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+        var FulfilledAt = DateTime.Now;
         using var con = new SqlConnection(connectionString);
+        using var cmd =
+            new SqlCommand(
+                "UPDATE s26489.dbo.[Order] SET FulfilledAt = @FulfilledAt WHERE IdProduct = @IDProduct and Amount = @Amount and CreatedAt < @CreatedAt",
+                con);
+        cmd.Parameters.AddWithValue("@IDProduct", product.IDProduct);
+        cmd.Parameters.AddWithValue("@Amount", product.Amount);
+        cmd.Parameters.AddWithValue("@CreatedAt", product.CreatedAt);
+        cmd.Parameters.AddWithValue("@FulfilledAt", FulfilledAt);
+        await con.OpenAsync();
+        var affectedCount = await cmd.ExecuteNonQueryAsync();
+        con.Close();
+        cmd.CommandText =
+            "SELECT IdOrder FROM s26489.dbo.[Order] WHERE IdProduct = @IDProduct and Amount = @Amount and CreatedAt < @CreatedAt";
+        await con.OpenAsync();
+        var rid = await cmd.ExecuteReaderAsync();
+        var idOrder = 0;
+        while (rid.Read())
+        {
+            idOrder = (int)rid["IdOrder"];
+        }
+
+        con.Close();
+        cmd.CommandText = "SELECT Price FROM s26489.dbo.Product WHERE IdProduct = @IDProduct";
+        await con.OpenAsync();
+        rid = await cmd.ExecuteReaderAsync();
+        double cena = 0;
+        while (rid.Read())
+        {
+            cena = (double)(decimal)rid["Price"];
+        }
+
+        con.Close();
+            //Wyciągnąć Cene z produktu oraz ID Order
+        cena = cena * product.Amount;
+        var cmds = new SqlCommand("INSERT INTO s26489.dbo.Product_Warehouse (IdWarehouse,IdProduct,IdOrder,Amount,Price,CreatedAt) VALUES(@IdWarehouse,@IdProduct,@IdOrder,@Amount,@Price,@FulfilledAt); SELECT SCOPE_IDENTITY()",con);
+            
+                cmds.Parameters.AddWithValue("@IdWarehouse", product.IDWarehouse);
+                cmds.Parameters.AddWithValue("@IdProduct", product.IDProduct);
+                cmds.Parameters.AddWithValue("@IdOrder", idOrder);
+                cmds.Parameters.AddWithValue("@Amount", product.Amount);
+                cmds.Parameters.AddWithValue("@FulfilledAt", FulfilledAt);
+                cmds.Parameters.AddWithValue("@Price", cena);
+                await con.OpenAsync();
+                int insertedId = (int)(decimal)await cmds.ExecuteScalarAsync();
+                System.Console.WriteLine(insertedId);
+                con.Close();
+                return insertedId;
         
-        return 3;
     }
 
     public async Task<bool> AvaliableProductAsync(Product product)
@@ -31,7 +84,15 @@ public class WareHouseRepository : IWareHouseRepository
         con.Close();
         if ((int)affectedCount ==1 && product.Amount > 0)
         {
-            return true;
+            using var cmds = new SqlCommand("SELECT COUNT (1) FROM s26489.dbo.Warehouse WHERE IdWarehouse = @IdWarehouse", con);
+            cmds.Parameters.AddWithValue("@IdWarehouse", product.IDWarehouse);
+            await con.OpenAsync();
+            var affectedWarehouse= await cmds.ExecuteScalarAsync();
+            con.Close();
+            if ((int)affectedWarehouse == 1)
+            {
+                return true;    
+            }
         }
         return false;
     }
@@ -50,14 +111,39 @@ public class WareHouseRepository : IWareHouseRepository
         {
             return true;
         }
+
         return false;
-        
     }
+
+    public async Task<bool> AlredyOrderedAsync(Product product)
+    {
+        var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+        using var con = new SqlConnection(connectionString);
+        using var cmd = new SqlCommand("SELECT IdOrder FROM s26489.dbo.[Order] WHERE IdProduct = @IDProduct and Amount = @Amount and CreatedAt < @CreatedAt", con);
+        cmd.Parameters.AddWithValue("@IDProduct", product.IDProduct);
+        cmd.Parameters.AddWithValue("@Amount", product.Amount);
+        cmd.Parameters.AddWithValue("@CreatedAt", product.CreatedAt);
+        await con.OpenAsync();
+        var rid = cmd.ExecuteReader();
+        var idOrder = 0; 
+        while (rid.Read())
+        {
+            idOrder = (int)rid["IdOrder"];
+        }
+
+        if (idOrder == 0)
+        {
+            return false;
+        }
+        con.Close();
+        using var cmds = new SqlCommand("SELECT (1) FROM s26489.dbo.Product_Warehouse WHERE IdOrder = @IdOrder",con);
+        cmds.Parameters.AddWithValue("@IdOrder", idOrder);
+        await con.OpenAsync();
+        var affectedCount = await cmds.ExecuteScalarAsync();
+        if(affectedCount == null )
+        {
+            return true;
+        }
+        return false;
+    }  
 }
-/*
-2. Możemy dodać produkt do magazynu tylko wtedy, gdy istnieje
-zamówienie zakupu produktu w tabeli Order. Dlatego sprawdzamy, czy w
-tabeli Order istnieje rekord z IdProduktu i Ilością (Amount), które
-odpowiadają naszemu żądaniu. Data utworzenia zamówienia powinna
-być wcześniejsza niż data utworzenia w żądaniu.
-*/
