@@ -17,6 +17,8 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
         builder.Services.AddScoped<IWareHouseService, WareHouseService>();
+        builder.Services.AddScoped<IWareHouseRepository2, WareHouseRepository2>();
+        builder.Services.AddScoped<IWareHouseService2, WareHouseService2>();
        
         var app = builder.Build();
        

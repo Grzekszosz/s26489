@@ -12,12 +12,6 @@ public class WareHouseRepository : IWareHouseRepository
     {
         _configuration = configuration;
     }
-    /*
-5.Wstawiamy rekord do tabeli Product_Warehouse. Kolumna Price
-powinna odpowiadać cenie produktu pomnożonej przez kolumnę Amount
-z naszego zamówienia. Ponadto wstawiamy wartość CreatedAt zgodnie
-z aktualnym czasem. (INSERT)
-*/
     public async Task<int> AddProductAsync(Product product)
     {
         var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
