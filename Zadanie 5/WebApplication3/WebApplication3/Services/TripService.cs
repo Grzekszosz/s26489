@@ -1,18 +1,20 @@
-﻿using WebApplication3.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication3.Models;
+using WebApplication3.Repositories;
 
 namespace WebApplication3.Services;
 
 public class TripService:ITripService
 {
-    private readonly ITripService _tripService;
+    private readonly ITripRepository _tripRepository;
 
-    public TripService(ITripService tripService)
+    public TripService(ITripRepository tripRepository)
     {
-        _tripService = tripService;
+        _tripRepository = tripRepository;
     }
 
-    public async Task<Trip> GetTripsAsync()
+    public async Task<IEnumerable<TripDto>> GetTripsAsync()
     {
-        return await _tripService.GetTripsAsync();
+        return await _tripRepository.GetTripsAsync();
     }
 }

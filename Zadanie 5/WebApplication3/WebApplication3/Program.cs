@@ -1,3 +1,7 @@
+using WebApplication3.Models;
+using WebApplication3.Repositories;
+using WebApplication3.Services;
+
 public class Program
 {
     
@@ -9,7 +13,9 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
-        
+        builder.Services.AddScoped<ITripRepository, TripRepository>();
+        builder.Services.AddScoped<ITripService, TripService>();
+       
         var app = builder.Build();
 
         //Configuring the HTTP request pipeline

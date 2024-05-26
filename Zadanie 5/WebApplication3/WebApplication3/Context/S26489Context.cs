@@ -25,9 +25,11 @@ public partial class S26489Context : DbContext
     public virtual DbSet<Trip> Trips { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=S26489;Integrated Security=True;Trust Server Certificate=True");
-
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https: //go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder
+                        .UseSqlServer(
+                                        "Data Source=db-mssql;Initial Catalog=S26489;Integrated Security=True;Trust Server Certificate=True")
+                        .LogTo(Console.WriteLine, LogLevel.Information);
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Client>(entity =>

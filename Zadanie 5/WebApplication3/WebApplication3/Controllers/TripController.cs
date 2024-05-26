@@ -16,6 +16,7 @@ public class TripController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTripsAsync()
     {
-        return Ok();
+        var trips =await  _tripService.GetTripsAsync();
+        return Ok(trips);
     }
 }
