@@ -1,6 +1,9 @@
 ﻿namespace WebApplication4.Models.DTO;
 
-public class PatientDTO
+public class PatientDTO :Patient
 {
-    
+    public int IdPatient { get; set; }
+    public string FisrtName { get; set; }
+    public string LastName { get; set; }
+    public  DateTime BirthDate { get; set; }
 }
