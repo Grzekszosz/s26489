@@ -6,7 +6,7 @@ public class PrescriptionDTO
     public DateTime Date { get; set; }
     public DateTime DueTime { get; set; }
     public ICollection<MedicamentDTO> Medicaments { get; set; }
-    public DoctorDTO
+    //public DoctorDTO
 }
 
 /*
